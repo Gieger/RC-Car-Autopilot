@@ -8,20 +8,16 @@ class Controller(object):
     speed = None  # current frame is stored here by background thread
     throttle = None
 
-    def initialize(self):
+    def __init__(self):
         if Controller.thread is None:
             # start background frame thread
             Controller.thread = threading.Thread(target=self._thread)
             Controller.thread.start()
 
-    def get_key(self):
-        self.initialize()
-        return self.steering
-
     @classmethod
     def _thread(cls):
 
-        gamepad = InputDevice('/dev/input/event17')
+        gamepad = InputDevice('/dev/input/event3')
 
         print(gamepad)
 
@@ -64,11 +60,11 @@ class Controller(object):
 
                 if ecodes.bytype[absevent.event.type][absevent.event.code] == "ABS_Y":
                     if absevent.event.value <= 120:                  
-                        cls.steering = float(absevent.event.value)
+                        cls.speed = float(absevent.event.value)
                     elif absevent.event.value >= 134:
-                        cls.steering = float(absevent.event.value)
+                        cls.speed = float(absevent.event.value)
                     elif absevent.event.value >= 121 or absevent.event.value <= 133:
-                        cls.steering = float(0)
+                        cls.speed = float(0)
 
                 elif ecodes.bytype[absevent.event.type][absevent.event.code] == "ABS_Z":
                     if absevent.event.value <= 121:

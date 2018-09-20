@@ -10,8 +10,10 @@ def loop(trexxas):
             time.sleep(0)
 
         b = trexxas.frame
-        print(b)
-        cv2.imshow('frame',b)    
-        time.sleep(2)
+        c = trexxas.speed
+        
+        print(b,c)
+  
+        
 
 loop(Trexxas_Summit())
