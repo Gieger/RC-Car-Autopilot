@@ -5,7 +5,8 @@ import threading
 
 class Controller(object):
     thread = None  # background thread that reads frames from camera
-    steering = None  # current frame is stored here by background thread
+    speed = None  # current frame is stored here by background thread
+    throttle = None
 
     def initialize(self):
         if Controller.thread is None:
@@ -20,7 +21,7 @@ class Controller(object):
     @classmethod
     def _thread(cls):
 
-        gamepad = InputDevice('/dev/input/event11')
+        gamepad = InputDevice('/dev/input/event17')
 
         print(gamepad)
 

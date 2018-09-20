@@ -1,11 +1,17 @@
-from gamepad import Controller
+from car import Trexxas_Summit
+import numpy as np
+import time
+import cv2
 
-
-def gen(controller):
+def loop(trexxas):
     while True:
-        steering = controller.get_key()
-        print(steering)
+        #a = trexxas.get_frame()   
+        while trexxas.frame is None:
+            time.sleep(0)
 
+        b = trexxas.frame
+        print(b)
+        cv2.imshow('frame',b)    
+        time.sleep(2)
 
-
-gen(Controller())
+loop(Trexxas_Summit())

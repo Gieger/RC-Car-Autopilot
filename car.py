@@ -1,16 +1,26 @@
+import time
+import threading
+
 from pwm import PCA9685
+from camera import USB_Camera as Camera
+from gamepad import Controller
 
 class Trexxas_Summit(object):
+    thread = None  # background thread that reads frames from camera
+    frame = None  # current frame is stored here by background thread
+    speed = None
+
 
     def __init__(self):
-        # Servo-data
-        self.servo_steering1 = PCA9685(3)
-        self.servo_steering2 = PCA9685(12)
-        self.servo_esc = PCA9685(13)
+        if Trexxas_Summit.thread is None:
+            # start background frame thread
+            Trexxas_Summit.thread = threading.Thread(target=self._thread)
+            Trexxas_Summit.thread.start()
 
-    def set_speed(self, val):
-        self.servo_esc.run(val)
-
-    def set_steering(self, val):
-        self.servo_steering1.run(val)
-        self.servo_steering2.run(val)
+    @classmethod
+    def _thread(cls):
+        camera = Camera()
+        controller = Controller()
+        while True:
+            cls.speed = controller.speed
+            cls.frame = camera.get_frame()

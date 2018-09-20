@@ -1,11 +1,12 @@
 import time
 import pkg_resources
 import smbus2 as smbus
+import Fabo_PCA9685
 
 class PCA9685:
 
     def __init__(self, channel, frequency):
-        import Fabo_PCA9685
+        
         self.BUSNUM=1
         self.INITIAL_VALUE=300
         self.bus = smbus.SMBus(self.BUSNUM)
