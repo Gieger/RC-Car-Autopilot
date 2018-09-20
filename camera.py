@@ -8,7 +8,7 @@
 import time
 import io
 import threading
-import cv2
+from cv2 import cv2
 
 class USB_Camera(object):
     thread = None  # background thread that reads frames from camera
@@ -36,11 +36,11 @@ class USB_Camera(object):
         time.sleep(2)
         while (True):
             # Capture frame-by-frame
-            ret, cls.frame = cap.read()  
+            ret, cls.frame = cap.read()
+             
             # if there hasn't been any clients asking for frames in
             # the last 10 seconds stop the thread
-            if time.time() - cls.last_access > 10:
-                break
+
         cap.release()
         cls.thread = None
 
