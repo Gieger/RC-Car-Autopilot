@@ -82,18 +82,20 @@ def augument(data_dir, center, left, right, steering_angle, range_x=100, range_y
 
 def batch_generator(data_dir, image_paths, steering_angles, batch_size, is_training):
     images = np.empty([batch_size, IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_CHANNELS])
-    steers = np.empty([batch_size, 2])
-
+    steers = np.empty(batch_size)
     while True:
         i = 0
         for index in np.random.permutation(image_paths.shape[0]):
-            center = image_paths[index]
-            steering_angle, throttle = steering_angles[index]
-            image = load_image(data_dir, center)
-            images[i] = preprocess(image)
-            steers[i][0] = steering_angle
-            steers[i][1] = throttle
+            center, left, right = image_paths[index]
+            steering_angle = steering_angles[index]
 
+            if is_training and np.random.rand() < 0.6:
+                image, steering_angle = augument(data_dir, center, left, right, steering_angle)
+            else:
+                image = load_image(data_dir, center) 
+
+            images[i] = preprocess(image)
+            steers[i] = steering_angle
             i += 1
             if i == batch_size:
                 break

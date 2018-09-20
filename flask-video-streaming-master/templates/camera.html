@@ -1,0 +1,46 @@
+<!--
+   index.html
+
+-->
+
+<html>
+  <head>
+    <title>Onbard-Cam</title>
+    <link rel="stylesheet" href='../static/style.css'/>
+    <style>
+		body {
+			text-align: center;
+		}
+        input[type=text] {
+    width: 80px;
+    height: 80px;
+    /*padding: 12px 20px;*/
+    /*margin: 8px 0;*/
+    box-sizing: border-box;
+    border: 2px solid red;
+    background-color:green;
+    color:blue;
+    border-radius: 4px;
+    text-align: center;
+}
+    </style>
+  </head>
+  <body>
+    <h1>Herbie Live Streaming</h1>
+    <h3><img src="{{ url_for('video_feed') }}" width="50%"></h3>
+    <h3>{{ time }}</h3>
+    <hr>
+	<h3> Zurück zur Hautpseite ==> <a href="/"class="button">RETURN</a></h3>
+	<hr>
+
+    <form>
+        <label for="fname">First Name<br></label>
+        <input type="text" id="fname" name="firstname" value="Mickey"><br>
+    </form>
+
+  </body>
+</html>
+<body>
+
+</body>
+</html>
