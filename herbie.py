@@ -1,7 +1,7 @@
 from car import Vehicle
-from camera import USB_Camera as Camera
-from datastore import Datastore
-from controller import Logitech_F710 as Controller
+from parts.camera import USB_Camera as Camera
+from parts.datastore import Datastore
+from parts.controller import Logitech_F710 as Controller
 
 
 camera = Camera(resolution=(600,800),fps=30)
