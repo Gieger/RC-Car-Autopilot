@@ -13,7 +13,9 @@ car = Vehicle()
 car.add(camera, outputs=['camera'], threaded=True)
 car.add(controller, outputs=['controller'], threaded=True)
 car.add(datastore, inputs=['camera','controller'], threaded=True)
-
+print('Car Create')
 car.start()
 car.update_parts()
+#car.stop()
+
 

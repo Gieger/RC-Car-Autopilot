@@ -24,6 +24,8 @@ class Datastore:
         self.record = None
         self.stop_all = None
         self.save = None
+        print('Datastore loading')
+
         time.sleep(5)
 
     def run_threaded(self, camera, controller):
@@ -35,23 +37,28 @@ class Datastore:
         self.save = controller[4]
 
     def update(self):
-        while True:
-            t = datetime.utcnow().strftime('%Y_%m_%d_%H_%M_%S_%f')[:-3]
-        
-            path = "Data/Images/frame_" + str(t) + ".jpg"
-            #cv2.imwrite(os.path.join(path , 'waka.jpg'),img)
+        while self.stop_all:
+            time.sleep(.5)
+            if self.record == True:
+                t = datetime.utcnow().strftime('%Y_%m_%d_%H_%M_%S_%f')[:-3]
+            
+                path = "Data/Images/frame_" + str(t) + ".jpg"
+                #cv2.imwrite(os.path.join(path , 'waka.jpg'),img)
 
-            cv2.imwrite(path, self.frame)
-            print(self.speed)
-            self.values.append([path, self.speed, self.angle])
+                cv2.imwrite(path, self.frame)
+                self.values.append([path, self.speed, self.angle])
 
-            self.count = self.count + 1
-            if self.count == 10:
-                myFile = open('csvexample3.csv', 'w')
+            if self.save == True:
+                t = datetime.utcnow().strftime('%Y_%m_%d_%H_%M_%S_%f')[:-3]
+            
+                path = "Data/Logs/Log_" + str(t) + ".csv"
+                myFile = open(path, 'w')
 
                 with myFile:  
                     writer = csv.writer(myFile, delimiter=',', quoting=csv.QUOTE_ALL)
                     writer.writerows(self.values)
+
+                self.values = []
             
 
     def shutdown(self):

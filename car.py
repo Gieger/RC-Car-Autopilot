@@ -53,10 +53,10 @@ class Vehicle():
         
         print('Starting vehicle...')
         time.sleep(1)
-        
+        count = 0
         while self.on:
 
-            
+            count = count + 1
             for entry in self.parts:
                 p = entry['part']
 
@@ -71,31 +71,42 @@ class Vehicle():
                 
                 time.sleep(delay)
                 
-            #if count > 10: self.on = False
+            if count > 2: self.on = False
 
 
     def update_parts(self):
+        print('Started vehicle...')
+        while self.parts.outputs.:
+            for entry in self.stop_all:
+                
+                run = True
+                
+                if entry.get('run_condition'):
+                    run_condition = entry.get('run_condition')
+                    run = self.mem.get([run_condition])[0]
+                
+                if run:
+                    p = entry['part']
 
+                    inputs = self.mem.get(entry['inputs'])
+
+                    if entry.get('thread'):
+                        outputs = p.run_threaded(*inputs)
+
+                    else:
+                        outputs = p.run(*inputs)
+
+                    if outputs is not None:
+                        self.mem.put(entry['outputs'], outputs)
+
+
+
+    def stop(self):
         for entry in self.parts:
-            run = True
-
-            if entry.get('run_condition'):
-                run_condition = entry.get('run_condition')
-                run = self.mem.get([run_condition])[0]
-
-            if run:
-                p = entry['part']
-
-                inputs = self.mem.get(entry['inputs'])
-
-                if entry.get('thread'):
-                    outputs = p.run_threaded(*inputs)
-
-                else:
-                    outputs = p.run(*inputs)
-
-                if outputs is not None:
-                    self.mem.put(entry['outputs'], outputs)
+            try:
+                entry['part'].shutdown()
+            except Exception as e:
+                print(e)
 
 
 class PrintPart():    
