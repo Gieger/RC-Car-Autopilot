@@ -12,7 +12,7 @@ car = Vehicle()
 
 car.add(camera, outputs=['camera'], threaded=True)
 car.add(controller, outputs=['controller'], threaded=True)
-car.add(datastore, inputs=['camera','controller'])
+car.add(datastore, inputs=['camera','controller'], threaded=True)
 
 car.start()
 car.update_parts()
