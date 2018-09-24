@@ -18,7 +18,6 @@ class USB_Camera():
         self.frame = self.camera.read()
         self.on = True
 
-        print('USB-Camera loaded.. .warming camera')
         time.sleep(2)
 
     def run_threaded(self):

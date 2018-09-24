@@ -54,9 +54,8 @@ class Vehicle():
         print('Starting vehicle...')
         time.sleep(1)
         
-        count = 0
         while self.on:
-            count += 1
+
             
             for entry in self.parts:
                 p = entry['part']
