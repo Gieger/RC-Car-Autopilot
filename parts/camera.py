@@ -7,10 +7,11 @@ import cv2
 
 class USB_Camera():
     name = "USB-Camera"
-    def __init__(self, resolution=(120, 160), fps=30):    
+    def __init__(self, resolution=(120, 160), fps=30):
+
         resolution = (resolution[1], resolution[0])
 
-        self.camera = cv2.VideoCapture(0) 
+        self.camera = cv2.VideoCapture(1)
         self.camera.set(cv2.CAP_PROP_FRAME_WIDTH, resolution[0])
         self.camera.set(cv2.CAP_PROP_FRAME_HEIGHT, resolution[1])
         self.camera.set(cv2.CAP_PROP_FPS, fps)

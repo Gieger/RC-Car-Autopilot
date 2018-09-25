@@ -71,13 +71,14 @@ class Vehicle():
                 
                 time.sleep(delay)
                 
-            if count > 2: self.on = False
+            if count > 1:
+                self.on = False
 
 
     def update_parts(self):
         print('Started vehicle...')
-        while self.parts.outputs.:
-            for entry in self.stop_all:
+        while True:
+            for entry in self.parts:
                 
                 run = True
                 

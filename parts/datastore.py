@@ -21,9 +21,9 @@ class Datastore:
         self.frame = None
         self.speed = None
         self.angle = None
-        self.record = None
+        self.record = False
         self.stop_all = None
-        self.save = None
+        self.save = False
         print('Datastore loading')
 
         time.sleep(5)
@@ -37,16 +37,17 @@ class Datastore:
         self.save = controller[4]
 
     def update(self):
-        while self.stop_all:
-            time.sleep(.5)
+        while True:
+
             if self.record == True:
                 t = datetime.utcnow().strftime('%Y_%m_%d_%H_%M_%S_%f')[:-3]
-            
+                time.sleep(.5)
                 path = "Data/Images/frame_" + str(t) + ".jpg"
                 #cv2.imwrite(os.path.join(path , 'waka.jpg'),img)
 
                 cv2.imwrite(path, self.frame)
                 self.values.append([path, self.speed, self.angle])
+                print(self.speed, self.angle)
 
             if self.save == True:
                 t = datetime.utcnow().strftime('%Y_%m_%d_%H_%M_%S_%f')[:-3]
@@ -65,4 +66,3 @@ class Datastore:
         self.on = False
         print('stoping PiCamera')
         time.sleep(.5)
-        self.stream.close()
