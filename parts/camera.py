@@ -11,7 +11,7 @@ class USB_Camera():
 
         resolution = (resolution[1], resolution[0])
 
-        self.camera = cv2.VideoCapture(1)
+        self.camera = cv2.VideoCapture(0)
         self.camera.set(cv2.CAP_PROP_FRAME_WIDTH, resolution[0])
         self.camera.set(cv2.CAP_PROP_FRAME_HEIGHT, resolution[1])
         self.camera.set(cv2.CAP_PROP_FPS, fps)
@@ -25,8 +25,7 @@ class USB_Camera():
         return self.frame
 
     def update(self):
-        self.running=True
-        while self.running:
+        while self.on:
             ret, self.frame = self.camera.read()
 
             if not self.on:
@@ -35,6 +34,8 @@ class USB_Camera():
     def shutdown(self):
         self.on = False
         print('stoping Camera')
-        time.sleep(.5)
+        
         self.camera.cap.release()
         self.camera.close()
+
+        time.sleep(.5)

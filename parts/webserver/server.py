@@ -129,6 +129,3 @@ def run(camera, input):
     app.listen(options.port)
     tornado.ioloop.IOLoop.current().start()
 
-
-if __name__ == "__main__":
-    main()

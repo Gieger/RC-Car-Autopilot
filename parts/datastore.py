@@ -37,8 +37,7 @@ class Datastore:
         self.save = controller[4]
 
     def update(self):
-        while True:
-
+        while self.on:
             if self.record == True:
                 t = datetime.utcnow().strftime('%Y_%m_%d_%H_%M_%S_%f')[:-3]
                 #time.sleep(.5)
@@ -60,6 +59,7 @@ class Datastore:
                     writer.writerows(self.values)
 
                 self.values = []
+                time.sleep(5)
             
 
     def shutdown(self):

@@ -1,4 +1,6 @@
 from threading import Thread
+import random
+import time
 
 class Memory():
     def __init__(self):
@@ -16,8 +18,6 @@ class Memory():
         return result
         
 
-import random
-import time
 
 class Vehicle():
     def __init__(self, mem=None):
@@ -46,68 +46,64 @@ class Vehicle():
         self.parts.append(entry)
     
     
-    def start(self, delay=.1):
-        for entry in self.parts:
-            if entry.get('thread'):
-                entry.get('thread').start()
-        
-        print('Starting vehicle...')
-        time.sleep(1)
-        count = 0
-        while self.on:
+    def start(self, rate_hz=50, max_loop_count=None):
+            self.on = True
 
-            count = count + 1
             for entry in self.parts:
-                p = entry['part']
-
-                inputs = self.mem.get(entry['inputs'])
-                
                 if entry.get('thread'):
-                    outputs = p.run_threaded(*inputs)
-                else:
-                    outputs = p.run(*inputs)
-                
-                self.mem.put(entry['outputs'], outputs)
-                
-                time.sleep(delay)
-                
-            if count > 1:
-                self.on = False
+                    entry.get('thread').start()
+
+            print('Starting vehicle...')
+            time.sleep(1)
+
+            loop_count = 0
+
+            while self.on:
+                start_time = time.time()
+                loop_count += 1
+
+                self.update_parts()
+
+                sleep_time = 1.0 / rate_hz - (time.time() - start_time)
+
+                if sleep_time > 0.0:
+                    time.sleep(sleep_time)
+
+                if max_loop_count and loop_count > max_loop_count:
+                    self.on = False
+
+            self.stop()
 
 
     def update_parts(self):
-        print('Started vehicle...')
-        while True:
-            for entry in self.parts:
-                
-                run = True
-                
-                if entry.get('run_condition'):
-                    run_condition = entry.get('run_condition')
-                    run = self.mem.get([run_condition])[0]
-                
-                if run:
-                    p = entry['part']
+        for entry in self.parts:
+            
+            run = True
+            
+            if entry.get('run_condition'):
+                run_condition = entry.get('run_condition')
+                run = self.mem.get([run_condition])[0]
+                #print('run_condition', entry['part'], entry.get('run_condition'), run)
+            
+            if run:
+                p = entry['part']
 
-                    inputs = self.mem.get(entry['inputs'])
+                inputs = self.mem.get(entry['inputs'])
 
-                    if entry.get('thread'):
-                        outputs = p.run_threaded(*inputs)
+                if entry.get('thread'):
+                    outputs = p.run_threaded(*inputs)
 
-                    else:
-                        outputs = p.run(*inputs)
+                else:
+                    outputs = p.run(*inputs)
 
-                    if outputs is not None:
-                        self.mem.put(entry['outputs'], outputs)
-
+                if outputs is not None:
+                    self.mem.put(entry['outputs'], outputs)
 
 
     def stop(self):
         for entry in self.parts:
-            try:
-                entry['part'].shutdown()
-            except Exception as e:
-                print(e)
+            entry['part'].shutdown()
+
 
 
 class PrintPart():    
