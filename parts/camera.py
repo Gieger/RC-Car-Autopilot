@@ -18,7 +18,7 @@ class USB_Camera():
 
         self.frame = self.camera.read()
         self.on = True
-        print('Camera loading')
+        
         time.sleep(2)
 
     def run_threaded(self):
@@ -29,13 +29,12 @@ class USB_Camera():
         while self.running:
             ret, self.frame = self.camera.read()
 
-            #if not self.on:
-            #    break
+            if not self.on:
+                break
 
     def shutdown(self):
         self.on = False
-        print('stoping PiCamera')
+        print('stoping Camera')
         time.sleep(.5)
-        self.stream.close()
         self.camera.cap.release()
         self.camera.close()

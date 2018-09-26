@@ -77,8 +77,8 @@ class Logitech_F710():
                             self.record = False 
                             print('Record OFF')         
 
-            #if not self.on:
-            #    break
+            if not self.on:
+                break
 
     def shutdown(self):
         self.on = False
