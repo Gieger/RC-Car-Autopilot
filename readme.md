@@ -40,7 +40,7 @@ Starten der Software
 sudo python3 herbie.py
 ```
 
-## Usage example
+## Nutzung
 
 Die Software wird über das Gamepad gesteuert.
 
@@ -53,21 +53,12 @@ Die Software wird über das Gamepad gesteuert.
 * 0.0.1
     * Start
 
-## Meta
 
-Dennis Gieger – [@YourTwitter](https://twitter.com/dbader_org) – YourEmail@example.com
 
-Distributed under the XYZ license. See ``LICENSE`` for more information.
+Dennis Gieger 
 
 [https://github.com/Gieger/](https://github.com/dbader/)
 
-## Contributing
-
-1. Fork it (<https://github.com/yourname/yourproject/fork>)
-2. Create your feature branch (`git checkout -b feature/fooBar`)
-3. Commit your changes (`git commit -am 'Add some fooBar'`)
-4. Push to the branch (`git push origin feature/fooBar`)
-5. Create a new Pull Request
 
 <!-- Markdown link & img dfn's -->
 [npm-image]: https://img.shields.io/npm/v/datadog-metrics.svg?style=flat-square
