@@ -1,0 +1,22 @@
+
+name: Herbie
+dependencies:
+
+- h5py=2.5
+- pillow=2.9
+- opencv 
+
+- pip:
+  - keras==2.2
+  - tensorflow==1.10
+  - inputs
+  - matplotlib
+  - jupyter
+  - opencv3
+  - pillow
+  - scikit-learn
+  - scikit-image
+  - scipy
+  - h5py
+  - seaborn
+  - pandas
