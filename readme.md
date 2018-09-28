@@ -3,10 +3,10 @@
 
 
 
-[![Python Version](https://img.shields.io/badge/python-3.x-blue.svg)](https://img.shields.io/pypi/pyversions/donkeycar.svg)
-[![Build Status][travis-image]][travis-url]
+[![Python Version][PY-url]][Py-image]
 
-![](./docs/header.png)
+
+![](./docs/img/herbie.jpg)
 
 ## Voraussetzungen 
 
@@ -60,5 +60,5 @@ Dennis Gieger
 
 
 <!-- Markdown link & img dfn's -->
-[travis-image]: https://img.shields.io/travis/dbader/node-datadog-metrics/master.svg?style=flat-square
-[travis-url]: https://travis-ci.org/dbader/node-datadog-metrics
+[Py-image]: (https://img.shields.io/pypi/pyversions/donkeycar.svg)
+[PY-url]: https://img.shields.io/badge/python-3.x-blue.svg
