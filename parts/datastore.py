@@ -40,7 +40,7 @@ class Datastore:
         while self.on:
             if self.record == True:
                 t = datetime.utcnow().strftime('%Y_%m_%d_%H_%M_%S_%f')[:-3]
-                #time.sleep(.5)
+                time.sleep(.2)
                 path = "Data/Images/frame_" + str(t) + ".jpg"
                 #cv2.imwrite(os.path.join(path , 'waka.jpg'),img)
 

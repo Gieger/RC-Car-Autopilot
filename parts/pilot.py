@@ -23,7 +23,7 @@ class Pilot:
         print('Autopilot loading')
 
         print("Load Model")
-        self.model = load_model(r'C:\Users\tron\Desktop\Neuer Ordner\RC-Car-Autopilot-0e30bc18e55c628c82a556567b24117ff6647715\Data\Model\model.h5')
+        self.model = load_model('/home/nvidia/RC-Car-Autopilot/Data/Model/model-001.h5')
         self.model._make_predict_function()
         print("Model bereit")
  

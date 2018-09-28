@@ -96,11 +96,12 @@ class Xbox_F710():
         self.record = False
         self.stop_all = False
         self.save = False
+        self.assist = False
         self.on = True
         print('Controller loading')
 
     def run_threaded(self):
-        return self.speed, self.angle, self.record, self.stop_all, self.save
+        return self.speed, self.angle, self.record, self.stop_all, self.save, self.assist
 
     def update(self):
         self.running = True
@@ -157,8 +158,18 @@ class Xbox_F710():
                             self.record = False
                             print('Record OFF')
 
-                            # if not self.on:
-            #    break
+                    if event.code == 'BTN_SOUTH':
+                        if event.state == 1:
+                            self.assist = False
+                            print('Assist OFF')
+
+                    if event.code == 'BTN_NORTH':
+                        if event.state == 1:
+                            self.assist = True
+                            print('Assist ON')
+
+                    # if not self.on:
+                    #    break
 
     def shutdown(self):
         self.on = False

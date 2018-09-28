@@ -11,7 +11,7 @@ class USB_Camera():
 
         resolution = (resolution[1], resolution[0])
 
-        self.camera = cv2.VideoCapture(0)
+        self.camera = cv2.VideoCapture(1)
         self.camera.set(cv2.CAP_PROP_FRAME_WIDTH, resolution[0])
         self.camera.set(cv2.CAP_PROP_FRAME_HEIGHT, resolution[1])
         self.camera.set(cv2.CAP_PROP_FPS, fps)
