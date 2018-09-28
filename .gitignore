@@ -128,5 +128,3 @@ $RECYCLE.BIN/
 *.jpg
 *.h5
 *.csv
-
-!docs/img/herbie.jpg
