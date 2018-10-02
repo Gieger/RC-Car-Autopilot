@@ -6,7 +6,7 @@
 [![Python Version][PY-url]][Py-image]
 
 
-![](./docs/img/herbie.jpg)
+![](./docs/img/herbie_v2.jpg)
 
 ## Voraussetzungen 
 
