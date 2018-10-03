@@ -19,18 +19,17 @@ class Pilot:
         self.stop_all = None
         self.save = False
         self.psteering = None
-        self.pthrottel = None
         print('Autopilot loading')
 
         print("Load Model")
-        self.model = load_model('/home/nvidia/RC-Car-Autopilot/Data/Model/model-001.h5')
+        self.model = load_model('/home/nvidia/Desktop/homegeht/RC-Car-Autopilot/data/models/model-024.h5')
         self.model._make_predict_function()
         print("Model bereit")
  
         
     def run_threaded(self, camera):
         self.frame = camera
-        return self.psteering, self.pthrottel
+        return self.psteering
 
 
     def update(self):
@@ -48,22 +47,20 @@ class Pilot:
                 #cv2.waitKey(0)
 
                 __outputs = self.model.predict(__image1, batch_size=1)
-                steer = __outputs[0][0]
-                throt = __outputs[0][1]
+                steer = __outputs[0]
+                steer = steer[0]
 
-                #print(steer, throt)
+                steer = steer * 2
+
+                #print(steer)
 
                 if steer < -1:
                     steer = -1
                 if steer > 1:
                     steer = 1
 
-                if throt < -1:
-                    throt = -1
-                if throt > 1:
-                    throt = 1
 
-                self.pthrottel = throt
+
                 self.psteering = steer
 
 

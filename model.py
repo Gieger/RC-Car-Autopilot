@@ -1,9 +1,11 @@
+
 from sklearn.model_selection import train_test_split
-from keras.models import Sequential
+from keras.models import Sequential, Model
 from keras.optimizers import Adam
 from keras.callbacks import ModelCheckpoint
-from keras.layers import Lambda, Conv2D, MaxPooling2D, Dropout, Dense, Flatten
+from keras.layers import Lambda, Conv2D, Convolution2D, MaxPooling2D, Dropout, Dense, Flatten, Activation, Input, Reshape, BatchNormalization,Cropping2D
 from utils import INPUT_SHAPE, batch_generator
+
 
 import pandas as pd
 import numpy as np
@@ -14,52 +16,128 @@ import os
 np.random.seed(0)
 
 def load_data(args):
-    data_df = pd.read_csv('Data/Logs/test1.csv', names=['image', 'throttle', 'steering'])
+    data_df = pd.read_csv('data/logs/Log_all.csv', names=['image', 'throttle', 'steering'])
 
     X = data_df['image'].values
-    y = data_df[['steering', 'throttle']].values
+    y = data_df['steering'].values
 
     X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=args.test_size, random_state=0)
 
     return X_train, X_valid, y_train, y_valid
 
 
-def build_model(args):
+
+def build_model_categorical(args):   
+
+    input_shape=(66, 200, 3)
+
+    drop = 0.2
+    
+    img_in = Input(shape=input_shape, name='img_in')
+    x = img_in
+    #x = Cropping2D(cropping=((10,0), (0,0)))(x) #trim 10 pixels off top
+    x = Lambda(lambda x: x/127.5 - 1.)(x) # normalize and re-center
+    x = Convolution2D(24, (5,5), strides=(2,2), activation='relu', name="conv2d_1")(x)
+    x = Dropout(drop)(x)
+    x = Convolution2D(32, (5,5), strides=(2,2), activation='relu', name="conv2d_2")(x)
+    x = Dropout(drop)(x)
+    x = Convolution2D(64, (5,5), strides=(2,2), activation='relu', name="conv2d_3")(x)
+    x = Dropout(drop)(x)
+    x = Convolution2D(64, (3,3), strides=(1,1), activation='relu', name="conv2d_4")(x)
+    x = Dropout(drop)(x)
+    x = Convolution2D(64, (3,3), strides=(1,1), activation='relu', name="conv2d_5")(x)
+    x = Dropout(drop)(x)
+    
+    x = Flatten(name='flattened')(x)
+    x = Dense(100, activation='relu')(x)
+    x = Dropout(drop)(x)
+    x = Dense(50, activation='relu')(x)
+    x = Dropout(drop)(x)
+
+    out = Dense(15, activation='softmax', name='out')(x)
+        
+    model = Model(inputs=[img_in], outputs=out)
+    
+    return model
+
+
+def build_model_safe(args):
+    
+
+    IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_CHANNELS = 66, 200, 3
+    INPUT_SHAPE = (IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_CHANNELS)
+
+    
     model = Sequential()
     model.add(Lambda(lambda x: x/127.5-1.0, input_shape=INPUT_SHAPE))
-    model.add(Conv2D(24, 5, 5, activation='elu', subsample=(2, 2)))
-    model.add(Conv2D(36, 5, 5, activation='elu', subsample=(2, 2)))
-    model.add(Conv2D(48, 5, 5, activation='elu', subsample=(2, 2)))
-    model.add(Conv2D(64, 3, 3, activation='elu'))
-    model.add(Conv2D(64, 3, 3, activation='elu'))
-    model.add(Dropout(args.keep_prob))
+    model.add(Conv2D(24, (5, 5),strides=(2, 2), activation='elu'))
+    model.add(Conv2D(36, (5, 5),strides=(2, 2), activation='elu'))
+    model.add(Conv2D(48, (3, 3),strides=(2, 2), activation='elu'))
+    model.add(Conv2D(64, (3, 3),strides=(2, 2), activation='elu'))
     model.add(Flatten())
-    model.add(Dense(100, activation='elu'))
-    model.add(Dense(50, activation='elu'))
-    model.add(Dense(10, activation='elu'))
-    model.add(Dense(2))
+    model.add(Dropout(.2))
+    model.add(Dense(512, activation='elu'))
+    model.add(Dropout(.5))
+    model.add(Dense(256, activation='elu'))
+    model.add(Dense(128, activation='elu'))
+    model.add(Dense(1))
     model.summary()
 
     return model
 
 
+def build_model(args):
+
+    input_shape=(66, 200, 3)
+
+    drop = 0.1
+    
+    img_in = Input(shape=input_shape, name='img_in')
+    x = img_in
+    #x = Cropping2D(cropping=((10,0), (0,0)))(x) #trim 10 pixels off top
+    x = Lambda(lambda x: x/127.5 - 1.)(x) # normalize and re-center
+    x = Convolution2D(24, (5,5), strides=(2,2), activation='relu', name="conv2d_1")(x)
+    x = Dropout(drop)(x)
+    x = Convolution2D(32, (5,5), strides=(2,2), activation='relu', name="conv2d_2")(x)
+    x = Dropout(drop)(x)
+    x = Convolution2D(64, (5,5), strides=(2,2), activation='relu', name="conv2d_3")(x)
+    x = Dropout(drop)(x)
+    x = Convolution2D(64, (3,3), strides=(1,1), activation='relu', name="conv2d_4")(x)
+    x = Dropout(drop)(x)
+    x = Convolution2D(64, (3,3), strides=(1,1), activation='relu', name="conv2d_5")(x)
+    x = Dropout(drop)(x)
+    
+    x = Flatten(name='flattened')(x)
+    x = Dense(100, activation='relu')(x)
+    x = Dropout(drop)(x)
+    x = Dense(50, activation='relu')(x)
+    x = Dropout(drop)(x)
+
+    out = Dense(1, activation='linear', name='out')(x)
+        
+    model = Model(inputs=[img_in], outputs=out)
+    
+    return model
+    
+
+
+
 def train_model(model, args, X_train, X_valid, y_train, y_valid):
-    checkpoint = ModelCheckpoint('Data/Model/model-{epoch:03d}.h5',
+    checkpoint = ModelCheckpoint('data/models/model-{epoch:03d}.h5',
                                  monitor='val_loss',
                                  verbose=0,
                                  save_best_only=args.save_best_only,
                                  mode='auto')
 
-    model.compile(loss='mean_squared_error', optimizer=Adam(lr=args.learning_rate))
+    model.compile(optimizer="adam", loss="mse")
 
     model.fit_generator(batch_generator(args.data_dir, X_train, y_train, args.batch_size, True),
-                        args.samples_per_epoch,
-                        args.nb_epoch,
-                        max_q_size=1,
+        	            steps_per_epoch=len(y_train) // args.batch_size,
+                        epochs=args.nb_epoch,
+                        verbose=1,
                         validation_data=batch_generator(args.data_dir, X_valid, y_valid, args.batch_size, False),
-                        nb_val_samples=len(X_valid),
-                        callbacks=[checkpoint],
-                        verbose=1)
+                        validation_steps=len(y_valid) // args.batch_size,
+                        callbacks=[checkpoint])
 
 
 def s2b(s):
@@ -70,10 +148,10 @@ def s2b(s):
 def main():
     parser = argparse.ArgumentParser(description='Herbie Autonomous RC-Car')
     parser.add_argument('-c', help='csv file',              dest='data_file',         type=str,   default='driving_log.csv')
-    parser.add_argument('-d', help='data directory',        dest='data_dir',          type=str,   default='Data/Logs')
+    parser.add_argument('-d', help='data directory',        dest='data_dir',          type=str,   default='data/logs')
     parser.add_argument('-t', help='test size fraction',    dest='test_size',         type=float, default=0.2)
     parser.add_argument('-k', help='drop out probability',  dest='keep_prob',         type=float, default=0.5)
-    parser.add_argument('-n', help='number of epochs',      dest='nb_epoch',          type=int,   default=10)
+    parser.add_argument('-n', help='number of epochs',      dest='nb_epoch',          type=int,   default=50)
     parser.add_argument('-s', help='samples per epoch',     dest='samples_per_epoch', type=int,   default='3000')
     parser.add_argument('-b', help='batch size',            dest='batch_size',        type=int,   default=40)
     parser.add_argument('-o', help='save best models only', dest='save_best_only',    type=s2b,   default='true')
@@ -94,4 +172,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

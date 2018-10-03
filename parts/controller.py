@@ -148,6 +148,11 @@ class Xbox_F710():
                             self.stop_all = True
                             print('Stop All')
 
+                    if event.code == 'BTN_EAST':
+                        if event.state == 1:
+                            self.stop_all = False
+                            print('Stop All')
+
                     if event.code == 'BTN_Z':
                         if event.state == 1:
                             self.record = True

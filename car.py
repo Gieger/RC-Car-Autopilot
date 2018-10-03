@@ -105,10 +105,9 @@ class Vehicle():
             entry['part'].shutdown()
 
 
-
-class PrintPart():    
+class PrintPart():
     name = "PrintPart"
-    
+
     def run(self, *args):
         print('PrintPart printing: ', end = ' ')
         print(*args)

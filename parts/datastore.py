@@ -39,19 +39,20 @@ class Datastore:
     def update(self):
         while self.on:
             if self.record == True:
-                t = datetime.utcnow().strftime('%Y_%m_%d_%H_%M_%S_%f')[:-3]
-                time.sleep(.2)
-                path = "Data/Images/frame_" + str(t) + ".jpg"
-                #cv2.imwrite(os.path.join(path , 'waka.jpg'),img)
+                if self.angle != 0:
+                    t = datetime.utcnow().strftime('%Y_%m_%d_%H_%M_%S_%f')[:-3]
+                    time.sleep(.1)
+                    path = "data/images/frame_" + str(t) + ".jpg"
+                    #cv2.imwrite(os.path.join(path , 'waka.jpg'),img)
 
-                cv2.imwrite(path, self.frame)
-                self.values.append([path, self.speed, self.angle])
-                print(self.speed, self.angle)
+                    cv2.imwrite(path, self.frame)
+                    self.values.append([path, self.speed, self.angle])
+                    print(self.speed, self.angle)
 
             if self.save == True:
                 t = datetime.utcnow().strftime('%Y_%m_%d_%H_%M_%S_%f')[:-3]
             
-                path = "Data/Logs/Log_" + str(t) + ".csv"
+                path = "data/logs/Log_" + str(t) + ".csv"
                 myFile = open(path, 'w')
 
                 with myFile:  

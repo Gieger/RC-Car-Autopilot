@@ -19,6 +19,7 @@ class PCA9685():
             self.pangle = 0
             self.assist = 0
             self.record = False
+            self.stop_all = False
 
 
     def run_threaded(self, controller, predict):
@@ -30,10 +31,9 @@ class PCA9685():
             self.save = controller[4]
             self.assist = controller[5]
 
-        if predict[0] != None:
-            pangle = predict[0]
-            pspeed = predict[1]
-            self.pspeed = pspeed * 50
+        if predict != None:
+            pangle = predict
+
             self.pangle = pangle * 100
 
     def update(self):
@@ -45,7 +45,12 @@ class PCA9685():
                 self.pwm.set_channel_value(13, 310 + self.angle)
 
             if self.assist == True:
-                self.pwm.set_channel_value(3, 330 - self.speed)
+                if self.stop_all == True:
+                    self.pwm.set_channel_value(3, 350)
+                else:
+                    self.pwm.set_channel_value(3, 330 - self.speed)
                 self.pwm.set_channel_value(12, 310 + self.pangle)
                 self.pwm.set_channel_value(13, 310 + self.pangle)
-                print(self.speed, self.pangle)
+                #print(self.speed, self.pangle)
+
+
