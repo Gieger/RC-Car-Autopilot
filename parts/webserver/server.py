@@ -2,6 +2,7 @@ import tornado.ioloop
 import tornado.web
 import tornado.websocket
 import asyncio
+import random
 import time
 import io
 import os
@@ -24,9 +25,9 @@ class WebServer(tornado.web.Application):
             (r'/video_feed', StreamHandler),
             (r'/setparams', SetParamsHandler),
             (r'/(?P<file_name>[^\/]+htm[l]?)+', HtmlPageHandler),
-            (r'/(?:image)/(.*)', tornado.web.StaticFileHandler, {'path': '/home/ocp/Schreibtisch/RC-Car-Autopilot/parts/webserver/image'}),
-            (r'/(?:css)/(.*)', tornado.web.StaticFileHandler, {'path': '/home/ocp/Schreibtisch/RC-Car-Autopilot/parts/webserver/css'}),
-            (r'/(?:js)/(.*)', tornado.web.StaticFileHandler, {'path': '/home/ocp/Schreibtisch/RC-Car-Autopilot/parts/webserver/js'})
+            (r'/(?:image)/(.*)', tornado.web.StaticFileHandler, {'path': '/home/ocp/Schreibtisch/workspace/RC-Car-Autopilot/parts/webserver/image'}),
+            (r'/(?:css)/(.*)', tornado.web.StaticFileHandler, {'path': '/home/ocp/Schreibtisch/workspace/RC-Car-Autopilot/parts/webserver/css'}),
+            (r'/(?:js)/(.*)', tornado.web.StaticFileHandler, {'path': '/home/ocp/Schreibtisch/workspace/RC-Car-Autopilot/parts/webserver/js'})
             ]
         settings = {'debug': True}
         super().__init__(handlers, **settings)
@@ -36,10 +37,11 @@ class WebServer(tornado.web.Application):
     def update(self):
         """ Start the tornado web server. """
         asyncio.set_event_loop(asyncio.new_event_loop())
-        self.listen(8888)
+        self.listen(8889)
         tornado.ioloop.IOLoop.instance().start()
 
-    def run_threaded(self, frame="None"): 
+    def run_threaded(self, frame="None", psteer="None"):
+        self.psteer = psteer
         self.frame = frame
 
         
@@ -61,11 +63,72 @@ class StreamHandler(tornado.web.RequestHandler):
         while True:
             # Generating images for mjpeg stream and wraps them into http resp
 
-            image = self.application.frame
+            img = self.application.frame
+            psteer = -0.5
+            thrott = 0.5
+            psteer = round(psteer, 2)
+            psteer1 = int(psteer * 220)
+
+            if self.get_argument('fd') == "false":
+                cv2.line(img,(80,460),(560,460),(0,0,255),2)
+
+                cv2.line(img,(80,450),(80,470),(0,0,255),2)
+                cv2.line(img,(140,455),(140,465),(0,0,255),2)
+                cv2.line(img,(200,450),(200,470),(0,0,255),2)
+                cv2.line(img,(260,455),(260,465),(0,0,255),2)
+                cv2.line(img,(320,450),(320,470),(0,0,255),2)
+                cv2.line(img,(380,455),(380,465),(0,0,255),2)
+                cv2.line(img,(440,450),(440,470),(0,0,255),2)
+                cv2.line(img,(500,455),(500,465),(0,0,255),2)
+                cv2.line(img,(560,450),(560,470),(0,0,255),2)
+
+                cv2.line(img,(320 + psteer1,470),(320 + psteer1,450),(0,255,0),6)               
 
             if self.get_argument('fd') == "true":
-                image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            ret, jpeg = cv2.imencode('.jpg', image)
+                img = cv2.cvtColor(img, cv2.COLOR_RGB2YUV)
+                cv2.rectangle(img,(0,0),(640,220),(0,0,0),-1)
+
+                
+                cv2.line(img,(80,160),(560,160),(0,0,255),2)
+
+                cv2.line(img,(80,150),(80,170),(0,0,255),2)
+                cv2.line(img,(140,155),(140,165),(0,0,255),2)
+                cv2.line(img,(200,150),(200,170),(0,0,255),2)
+                cv2.line(img,(260,155),(260,165),(0,0,255),2)
+                cv2.line(img,(320,150),(320,170),(0,0,255),2)
+                cv2.line(img,(380,155),(380,165),(0,0,255),2)
+                cv2.line(img,(440,150),(440,170),(0,0,255),2)
+                cv2.line(img,(500,155),(500,165),(0,0,255),2)
+                cv2.line(img,(560,150),(560,170),(0,0,255),2)
+
+
+                font                   = cv2.FONT_HERSHEY_SIMPLEX
+                bottomLeftCornerOfText = (250,100)
+                bottomLeftCornerOfText1 = (194,80)
+
+                fontScale              = 0.5
+                fontColor              = (0,255,0)
+                fontColor1              = (255,255,255)
+                lineType               = 2
+
+                cv2.putText(img,"Lenkung: " + str(psteer), 
+                    bottomLeftCornerOfText, 
+                    font, 
+                    fontScale,
+                    fontColor,
+                    lineType)
+
+                cv2.putText(img,"Beschleunigung: " + str(thrott), 
+                    bottomLeftCornerOfText1, 
+                    font, 
+                    fontScale,
+                    fontColor1,
+                    lineType)
+
+                cv2.line(img,(320 + psteer1,170),(320 + psteer1,150),(0,255,0),6)
+
+
+            ret, jpeg = cv2.imencode('.jpg', img)
 
 
 
