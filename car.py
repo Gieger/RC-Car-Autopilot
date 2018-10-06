@@ -5,18 +5,25 @@ import time
 
 class Memory():
     def __init__(self):
-        self.dict = {}
+        self.d = {}
         pass
     
     def put(self, keys, inputs):
-        for i, key in enumerate(keys):
-            #self.dict[key] = inputs[i]
-            self.dict[keys[0]] = inputs
-            
-    def get(self, keys):
-        result = [self.dict.get(k) for k in keys]
+        if len(keys) > 1:
+            for i, key in enumerate(keys):
+                try:
+                    self.d[key] = inputs[i]
+                except IndexError as e:
+                    error = str(e) + ' issue with keys: ' + str(key)
+                    raise IndexError(error)
+        else:
+            self.d[keys[0]] = inputs
 
+    def get(self, keys):
+        result = [self.d.get(k) for k in keys]
         return result
+
+
         
 
 class Herbie():
@@ -58,7 +65,7 @@ class Herbie():
             loop_count += 1
 
             self.update_parts()
-            time.sleep(rate_hz)
+            #time.sleep(rate_hz)
 
             if max_loop_count and loop_count > max_loop_count:
                 self.on = False

@@ -17,29 +17,27 @@ class Datastore:
     def __init__(self):
         self.values = []      
         self.on = True
-        self.count = 0
         self.frame = None
-        self.speed = None
-        self.angle = None
+        self.speed = 0
+        self.angle = 0
         self.record = False
-        self.stop_all = None
+        self.mode = "User"
         self.save = False
         print('Datastore loading')
 
         time.sleep(5)
 
-    def run_threaded(self, camera, controller):
+    def run_threaded(self, camera, speed, angle, record, save):
         self.frame = camera
-        self.speed = controller[0]
-        self.angle = controller[1]
-        self.record = controller[2]
-        self.stop_all = controller[3]
-        self.save = controller[4]
+        self.speed = speed
+        self.angle = angle
+        self.record = record
+        self.save = save
 
     def update(self):
         while self.on:
             if self.record == True:
-                if self.angle != 0:
+                if self.speed != 0:
                     t = datetime.utcnow().strftime('%Y_%m_%d_%H_%M_%S_%f')[:-3]
                     time.sleep(.1)
                     path = "data/images/frame_" + str(t) + ".jpg"

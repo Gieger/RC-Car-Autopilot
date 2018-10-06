@@ -1,13 +1,12 @@
-import smbus2 as smbus
-
-
-import Fabo_PCA9685
+from __future__ import division
 import time
 
-class PCA9685():
+class _Fabo_PCA9685():
     name = "PWM"
 
     def __init__(self, frequency=50):
+            import smbus2 as smbus
+            import Fabo_PCA9685
             self.BUSNUM=1
             self.INITIAL_VALUE=300
             self.bus = smbus.SMBus(self.BUSNUM)
@@ -19,22 +18,14 @@ class PCA9685():
             self.pangle = 0
             self.assist = 0
             self.record = False
-            self.stop_all = False
 
 
-    def run_threaded(self, controller, predict):
+
+    def run_threaded(self, values):
         if controller[0] != None:
-            self.speed = controller[0] * 50
-            self.angle = controller[1] * 100
-            self.record = controller[2]
-            self.stop_all = controller[3]
-            self.save = controller[4]
-            self.assist = controller[5]
-
-        if predict != None:
-            pangle = predict
-
-            self.pangle = pangle * 100
+            self.speed = speed
+            self.angle = angle
+            self.mode = mode
 
     def update(self):
         while True:
@@ -54,3 +45,24 @@ class PCA9685():
                 #print(self.speed, self.pangle)
 
 
+class PCA9685():
+    name = "PWM"
+    def __init__(self, frequency=60):
+
+        import Adafruit_PCA9685
+
+        self.pwm = Adafruit_PCA9685.PCA9685()
+        self.pwm.set_pwm_freq(60)
+        self.on = True
+        self.speed = 0
+        self.angle = 0
+
+
+    def run_threaded(self, speed, angle):       
+            self.speed = speed
+            self.angle = angle
+
+    def update(self):
+        while self.on:
+            self.pwm.set_pwm(12,0, 300 - int(self.speed*50))
+            self.pwm.set_pwm(3,0, 370 + int(self.angle*140))

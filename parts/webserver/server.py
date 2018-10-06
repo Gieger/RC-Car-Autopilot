@@ -12,6 +12,7 @@ import numpy as np
 from tornado.options import define, parse_command_line,options
 
 html_page_path = os.path.dirname(os.path.realpath(__file__)) + '/www/'
+
 class WebServer(tornado.web.Application):
     name = "Web-Server"
     
@@ -19,15 +20,15 @@ class WebServer(tornado.web.Application):
     def __init__(self):
         self.frame = "None"
 
-
         handlers = [
             (r'/', HtmlPageHandler),
             (r'/video_feed', StreamHandler),
             (r'/setparams', SetParamsHandler),
             (r'/(?P<file_name>[^\/]+htm[l]?)+', HtmlPageHandler),
-            (r'/(?:image)/(.*)', tornado.web.StaticFileHandler, {'path': '/home/ocp/Schreibtisch/workspace/RC-Car-Autopilot/parts/webserver/image'}),
-            (r'/(?:css)/(.*)', tornado.web.StaticFileHandler, {'path': '/home/ocp/Schreibtisch/workspace/RC-Car-Autopilot/parts/webserver/css'}),
-            (r'/(?:js)/(.*)', tornado.web.StaticFileHandler, {'path': '/home/ocp/Schreibtisch/workspace/RC-Car-Autopilot/parts/webserver/js'})
+            (r'/(?:image)/(.*)', tornado.web.StaticFileHandler, {'path': os.path.dirname(os.path.realpath(__file__)) + '/image/'}),
+            (r'/(?:fonts)/(.*)', tornado.web.StaticFileHandler, {'path': os.path.dirname(os.path.realpath(__file__)) + '/fonts/'}),
+            (r'/(?:css)/(.*)', tornado.web.StaticFileHandler, {'path': os.path.dirname(os.path.realpath(__file__)) + '/css/'}),
+            (r'/(?:js)/(.*)', tornado.web.StaticFileHandler, {'path': os.path.dirname(os.path.realpath(__file__)) + '/js/'})
             ]
         settings = {'debug': True}
         super().__init__(handlers, **settings)
@@ -40,13 +41,11 @@ class WebServer(tornado.web.Application):
         self.listen(8889)
         tornado.ioloop.IOLoop.instance().start()
 
-    def run_threaded(self, frame="None", psteer="None"):
-        self.psteer = psteer
+    def run_threaded(self, frame="None", steer="None",thrott ="None"):
+        self.steer = steer
         self.frame = frame
 
         
-    
-
 class StreamHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     @tornado.gen.coroutine
@@ -60,47 +59,60 @@ class StreamHandler(tornado.web.RequestHandler):
 
         self.served_image_timestamp = time.time()
         my_boundary = "--jpgboundary"
-        while True:
-            # Generating images for mjpeg stream and wraps them into http resp
 
+        while True:
             img = self.application.frame
-            psteer = -0.5
+            steer = self.application.steer
             thrott = 0.5
+            thrott1 = int(thrott * 100)
             psteer = round(psteer, 2)
-            psteer1 = int(psteer * 220)
+            psteer1 = int(psteer * 200)
 
             if self.get_argument('fd') == "false":
-                cv2.line(img,(80,460),(560,460),(0,0,255),2)
+                cv2.line(img,(200,560),(600,560),(0,0,255),2)
 
-                cv2.line(img,(80,450),(80,470),(0,0,255),2)
-                cv2.line(img,(140,455),(140,465),(0,0,255),2)
-                cv2.line(img,(200,450),(200,470),(0,0,255),2)
-                cv2.line(img,(260,455),(260,465),(0,0,255),2)
-                cv2.line(img,(320,450),(320,470),(0,0,255),2)
-                cv2.line(img,(380,455),(380,465),(0,0,255),2)
-                cv2.line(img,(440,450),(440,470),(0,0,255),2)
-                cv2.line(img,(500,455),(500,465),(0,0,255),2)
-                cv2.line(img,(560,450),(560,470),(0,0,255),2)
+                cv2.line(img,(200,550),(200,570),(0,0,255),2)
+                cv2.line(img,(250,555),(250,565),(0,0,255),2)
+                cv2.line(img,(300,550),(300,570),(0,0,255),2)
+                cv2.line(img,(350,555),(350,565),(0,0,255),2)
+                cv2.line(img,(400,550),(400,570),(0,0,255),2)
+                cv2.line(img,(450,555),(450,565),(0,0,255),2)
+                cv2.line(img,(500,550),(500,570),(0,0,255),2)
+                cv2.line(img,(550,555),(550,565),(0,0,255),2)
+                cv2.line(img,(600,550),(600,570),(0,0,255),2)
 
-                cv2.line(img,(320 + psteer1,470),(320 + psteer1,450),(0,255,0),6)               
+
+                cv2.line(img,(50,200),(50,400),(255,0,0),2)
+
+                cv2.line(img,(40,200),(60,200),(255,0,0),2)
+                cv2.line(img,(45,225),(55,225),(255,0,0),2)
+                cv2.line(img,(40,250),(60,250),(255,0,0),2)
+                cv2.line(img,(45,275),(55,275),(255,0,0),2)
+                cv2.line(img,(40,300),(60,300),(255,0,0),2)
+                cv2.line(img,(45,325),(55,325),(255,0,0),2)
+                cv2.line(img,(40,350),(60,350),(255,0,0),2)
+                cv2.line(img,(45,375),(55,375),(255,0,0),2)
+                cv2.line(img,(40,400),(60,400),(255,0,0),2)
+
+
+                cv2.line(img,(40,300 + thrott1),(60, 300 + thrott1),(0,255,0),6)  
+                cv2.line(img,(400 + psteer1,570),(400 + psteer1,550),(0,255,0),6)               
 
             if self.get_argument('fd') == "true":
                 img = cv2.cvtColor(img, cv2.COLOR_RGB2YUV)
-                cv2.rectangle(img,(0,0),(640,220),(0,0,0),-1)
+                cv2.rectangle(img,(0,0),(800,200),(0,0,0),-1)
+    
+                cv2.line(img,(200,160),(600,160),(0,0,255),2)
 
-                
-                cv2.line(img,(80,160),(560,160),(0,0,255),2)
-
-                cv2.line(img,(80,150),(80,170),(0,0,255),2)
-                cv2.line(img,(140,155),(140,165),(0,0,255),2)
                 cv2.line(img,(200,150),(200,170),(0,0,255),2)
-                cv2.line(img,(260,155),(260,165),(0,0,255),2)
-                cv2.line(img,(320,150),(320,170),(0,0,255),2)
-                cv2.line(img,(380,155),(380,165),(0,0,255),2)
-                cv2.line(img,(440,150),(440,170),(0,0,255),2)
-                cv2.line(img,(500,155),(500,165),(0,0,255),2)
-                cv2.line(img,(560,150),(560,170),(0,0,255),2)
-
+                cv2.line(img,(250,155),(250,165),(0,0,255),2)
+                cv2.line(img,(300,150),(300,170),(0,0,255),2)
+                cv2.line(img,(350,155),(350,165),(0,0,255),2)
+                cv2.line(img,(400,150),(400,170),(0,0,255),2)
+                cv2.line(img,(450,155),(450,165),(0,0,255),2)
+                cv2.line(img,(500,150),(500,170),(0,0,255),2)
+                cv2.line(img,(550,155),(550,165),(0,0,255),2)
+                cv2.line(img,(600,150),(600,170),(0,0,255),2)
 
                 font                   = cv2.FONT_HERSHEY_SIMPLEX
                 bottomLeftCornerOfText = (250,100)
@@ -111,27 +123,40 @@ class StreamHandler(tornado.web.RequestHandler):
                 fontColor1              = (255,255,255)
                 lineType               = 2
 
-                cv2.putText(img,"Lenkung: " + str(psteer), 
-                    bottomLeftCornerOfText, 
-                    font, 
-                    fontScale,
-                    fontColor,
-                    lineType)
+                if psteer > 0:
+                    cv2.putText(img,"Lenkung: +" + str(psteer), 
+                        bottomLeftCornerOfText, 
+                        font, 
+                        fontScale,
+                        fontColor,
+                        lineType)
 
-                cv2.putText(img,"Beschleunigung: " + str(thrott), 
-                    bottomLeftCornerOfText1, 
-                    font, 
-                    fontScale,
-                    fontColor1,
-                    lineType)
+                else:
+                    cv2.putText(img,"Lenkung: " + str(psteer), 
+                        bottomLeftCornerOfText, 
+                        font, 
+                        fontScale,
+                        fontColor,
+                        lineType)
+
+                if thrott > 0:
+                    cv2.putText(img,"Beschleunigung: +" + str(thrott), 
+                        bottomLeftCornerOfText1, 
+                        font, 
+                        fontScale,
+                        fontColor1,
+                        lineType)
+                else:
+                    cv2.putText(img,"Beschleunigung: " + str(thrott), 
+                        bottomLeftCornerOfText1, 
+                        font, 
+                        fontScale,
+                        fontColor1,
+                        lineType)
 
                 cv2.line(img,(320 + psteer1,170),(320 + psteer1,150),(0,255,0),6)
 
-
             ret, jpeg = cv2.imencode('.jpg', img)
-
-
-
 
             img = jpeg.tobytes()
   

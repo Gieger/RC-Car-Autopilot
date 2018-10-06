@@ -15,21 +15,18 @@ class Pilot:
         self.frame = None
         self.speed = None
         self.angle = None
-        self.record = False
-        self.stop_all = None
-        self.save = False
-        self.psteering = None
-        print('Autopilot loading')
+        self.mode = "User"
+        print('Steuerung lädt...')
 
-        print("Load Model")
+        print("KI laden")
         self.model = load_model('/home/nvidia/Desktop/homegeht/RC-Car-Autopilot/data/models/model-024.h5')
         self.model._make_predict_function()
-        print("Model bereit")
+        print("KI bereit")
  
         
     def run_threaded(self, camera):
         self.frame = camera
-        return self.psteering
+        return self.angle
 
 
     def update(self):

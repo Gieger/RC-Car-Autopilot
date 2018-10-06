@@ -1,5 +1,4 @@
 from inputs import get_gamepad
-from parts.pwm import PCA9685
 
 
 class Logitech_F710():
@@ -10,14 +9,15 @@ class Logitech_F710():
         self.speed = 0
         self.angle = 0
         self.record = False
-        self.stop_all = False
+        self.mode = "User"
+        self.end = False
         self.save = False
         self.on = True
 
         print('Controller loading')
 
     def run_threaded(self):
-        return self.speed, self.angle, self.record, self.stop_all, self.save
+        return self.speed, self.angle, self.record, self.mode, self.save, self.end
 
     def update(self):
         self.running=True
@@ -30,42 +30,38 @@ class Logitech_F710():
                     
                     if event.code == 'ABS_Y':
                         val = event.state
-                        if val == 128 or -386 or 385:
+                        if val == 255:
                             self.speed = float(0)
-                        if val > 385:
+                        if val > 255:
                             self.speed = float(val / 32767)
-                        if val < -386:
+                        if val < -255:
                             self.speed = float(val / 32768)
                         print(self.speed)
 
-
                     elif event.code == 'ABS_RX':
-                        if event.state == 128 or -386 or 385:
+                        if event.state == 0:
                             self.angle = float(0)
-                        if event.state > 385:
+                        if event.state > 0:
                             self.angle = float(event.state / 32767)
-                        if event.state < -386:
+                        if event.state < 0:
                             self.angle = float(event.state / 32768)
                         print(self.angle)
 
-
-
                 if event.ev_type == 'Key':  
 
-                    if event.code == 'BTN_SELECT':
+                    if event.code == 'BTN_START':
                         if event.state == 1:
                             self.save = True
                             print('Save')
-                            
 
                         if event.state == 0:
                             self.save = False
-                            print('Save')    
-                            
-                    if event.code == 'BTN_START':
+                            print('Save')
+
+                    if event.code == 'BTN_SELECT':
                         if event.state == 1:
-                            self.stop_all = True
-                            print('Stop All')
+                            self.end = True
+                            print('Programm ENDE')
 
                     if event.code == 'BTN_TR':
                         if event.state == 1:
@@ -74,11 +70,26 @@ class Logitech_F710():
 
                     if event.code == 'BTN_TL':
                         if event.state == 1:
-                            self.record = False 
-                            print('Record OFF')         
+                            self.record = False
+                            print('Record OFF')
 
-            if not self.on:
-                break
+                    if event.code == 'BTN_SOUTH':
+                        if event.state == 1:
+                            self.mode = "User"
+                            print('Benutzer-Modus')
+
+                    if event.code == 'BTN_NORTH':
+                        if event.state == 1:
+                            self.mode = "Assist"
+                            print('Lenkasisstent-Modus')  
+
+                    if event.code == 'BTN_WEST':
+                        if event.state == 1:
+                            self.mode = "Assist"
+                            print('Autonomesfahren-Modus') 
+
+            #if not self.on:
+                #break
 
     def shutdown(self):
         self.on = False
@@ -94,14 +105,14 @@ class Xbox_F710():
         self.speed = 0
         self.angle = 0
         self.record = False
-        self.stop_all = False
+        self.mode = False
         self.save = False
-        self.assist = False
+        self.end
         self.on = True
         print('Controller loading')
 
     def run_threaded(self):
-        return self.speed, self.angle, self.record, self.stop_all, self.save, self.assist
+        return self.speed, self.angle, self.record, self.end, self.save, self.mode
 
     def update(self):
         self.running = True
@@ -134,7 +145,7 @@ class Xbox_F710():
 
                 if event.ev_type == 'Key':
 
-                    if event.code == 'BTN_TR2':
+                    if event.code == 'BTN_START':
                         if event.state == 1:
                             self.save = True
                             print('Save')
@@ -143,34 +154,34 @@ class Xbox_F710():
                             self.save = False
                             print('Save')
 
-                    if event.code == 'BTN_TL2':
+                    if event.code == 'BTN_SELECT':
                         if event.state == 1:
-                            self.stop_all = True
+                            self.end = True
                             print('Stop All')
 
-                    if event.code == 'BTN_EAST':
-                        if event.state == 1:
-                            self.stop_all = False
-                            print('Stop All')
-
-                    if event.code == 'BTN_Z':
+                    if event.code == 'BTN_TR':
                         if event.state == 1:
                             self.record = True
                             print('Record ON')
 
-                    if event.code == 'BTN_WEST':
+                    if event.code == 'BTN_TL':
                         if event.state == 1:
                             self.record = False
                             print('Record OFF')
 
                     if event.code == 'BTN_SOUTH':
                         if event.state == 1:
-                            self.assist = False
+                            self.mode = "User"
                             print('Assist OFF')
 
                     if event.code == 'BTN_NORTH':
                         if event.state == 1:
-                            self.assist = True
+                            self.mode = "Assist"
+                            print('Assist ON')
+
+                    if event.code == 'BTN_EAST':
+                        if event.state == 1:
+                            self.mode = "Auto"
                             print('Assist ON')
 
                     # if not self.on:
