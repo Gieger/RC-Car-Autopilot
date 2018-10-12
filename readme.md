@@ -56,7 +56,7 @@ Die Software wird über das Gamepad gesteuert.
 
 Dennis Gieger 
 
-[https://github.com/Gieger/](https://github.com/dbader/)
+[https://github.com/Gieger/](https://github.com/Gieger/)
 
 
 <!-- Markdown link & img dfn's -->
