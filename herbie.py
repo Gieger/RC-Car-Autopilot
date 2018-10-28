@@ -1,31 +1,45 @@
+# herbie.py
+# Author: Dennis Gieger
 
-from car import Herbie
-from parts.camera import USB_Camera as Camera
-from parts.datastore import Datastore
-from parts.controller import Logitech_F710 as Controller
-#from parts.pilot import Pilot
-from parts.pwm import PCA9685
-from parts.webserver.server import WebServer
+# Komponenten import
+from fahrzeug import Herbie
+from komponenten.steuerung import Xbox_F710 as Steuerung
+from komponenten.kamera import PiCamera as Kamera
+from komponenten.gyro import Mpu6050 as Gyroskope
+from komponenten.pilot import Fahrer
+from komponenten.pwm import PCA9685
+from komponenten.datenspeicher import Datenspeicher
+from komponenten.webserver.server import WebServer
 
 print('Herbie startet')
-camera = Camera(resolution=(600,800),fps=30)
+
+# Instanziierung der Kopmponenten
 herbie = Herbie()
-controller = Controller()
-#pilot = Pilot()
-datastore = Datastore()
+steuerung = Steuerung()
+kamera = Kamera()
+gyro = Gyroskope()
+fahrer = Fahrer()
 pwm = PCA9685()
+datenspeicher = Datenspeicher()
 server = WebServer()
 
 print('Komponenten laden...')
 
-herbie.add(camera, outputs=['camera'], threaded=True)
-herbie.add(controller, outputs=['speed','angle','record','mode','save','end'], threaded=True)
-#car.add(pilot, inputs=['camera'], outputs=['pilot_steering'], threaded=True)
-herbie.add(pwm, inputs=['speed','angle'], threaded=True)
-herbie.add(datastore, inputs=['camera','speed','angle','record','save'], threaded=True)
-herbie.add(server, inputs=['camera','speed','angle'],threaded=True)
+"""
+Komponenten werden nach dem fogendem Schema angelegt:
+	herbie.hinzufuegen(komponente, eingang=['eingang_name',...], ausgang=['ausgang_name',...], ausfuehren_parallel = True or False)
+"""
 
-herbie.start()
+# Hinzufügen der Komponenten
+herbie.hinzufuegen(steuerung, ausgang=['beschleunigung','lenkung','aufnahme','modus','speichern','programm_ende'], ausfuehren_parallel=True)
+herbie.hinzufuegen(kamera, ausgang=['kamera'], ausfuehren_parallel=True)
+herbie.hinzufuegen(gyro, ausgang=['besch_x','besch_y','besch_z','gyro_x','gyro_y','gyro_z'], ausfuehren_parallel=True)
 
+herbie.hinzufuegen(fahrer, eingang=['kamera','beschleunigung','lenkung','modus'], ausgang=['lenkung','beschleunigung'], ausfuehren_parallel=True)
 
+herbie.hinzufuegen(pwm, eingang=['beschleunigung','lenkung'], ausfuehren_parallel=True)
+herbie.hinzufuegen(datenspeicher, eingang=['kamera','beschleunigung','lenkung','aufnahme','speichern','besch_x','besch_y','besch_z','gyro_x','gyro_y','gyro_z'], ausfuehren_parallel=True)
+herbie.hinzufuegen(server, eingang=['kamera','beschleunigung','lenkung'],ausfuehren_parallel=True)
 
+# Hauptschleife starten
+herbie.starten()
