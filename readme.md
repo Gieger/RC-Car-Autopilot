@@ -23,9 +23,15 @@ Um das Programm zu starten werden folgende Abhängigkeiten benötigt:
 ```sh
 sudo apt-get update
 sudo apt-get -y upgrade
-sudo apt-get install -y python3-pip
+sudo apt-get install -y python-pip
 
-pip3 install opencv
+pip install tensorflow
+pip install keras
+pip install opencv-python
+pip install pandas
+pip install numpy
+pip install sklearn
+pip install tornado
 ```
 
 ## Installation
