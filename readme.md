@@ -6,7 +6,7 @@
 [![Python Version][PY-url]][Py-image]
 
 
-![](./media/herbie_v2.png)
+![](./media/herbie_v3.jpg)
 
 ## Youtoube
 https://www.youtube.com/watch?v=siHh_I1PDYw&list=PLwBhQYl8W0NpmlF5_6Iv5jGDC2RXRzTEF

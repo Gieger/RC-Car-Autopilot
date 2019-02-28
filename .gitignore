@@ -125,6 +125,6 @@ $RECYCLE.BIN/
 *.lnk
 
 #Trainingsdaten
-*.jpg
+#*.jpg
 *.h5
 *.csv
