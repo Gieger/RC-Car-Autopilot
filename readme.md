@@ -9,7 +9,8 @@
 ![](./media/herbie_v3.jpg)
 
 ## Youtoube
-https://www.youtube.com/watch?v=siHh_I1PDYw&list=PLwBhQYl8W0NpmlF5_6Iv5jGDC2RXRzTEF
+
+[Testfahrt Videos Youtoube](https://www.youtube.com/watch?v=siHh_I1PDYw&list=PLwBhQYl8W0NpmlF5_6Iv5jGDC2RXRzTEF)
 
 ## Voraussetzungen 
 
@@ -62,11 +63,12 @@ Die Software wird über das Gamepad gesteuert.
     * Start
 
 
-
 Dennis Gieger 
 
-[https://github.com/Gieger/](https://github.com/Gieger/)
 
+## Credits
+
+[Will Roscoe and DonkeyCar Community](http://www.donkeycar.com/)
 
 <!-- Markdown link & img dfn's -->
 [Py-image]: (https://img.shields.io/pypi/pyversions/donkeycar.svg)
