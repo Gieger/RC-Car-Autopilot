@@ -68,7 +68,7 @@ Dennis Gieger
 
 ## Credits
 
-[Will Roscoe and DonkeyCar Community](http://www.donkeycar.com/)
+[Will Roscoe, Tawn Kramer and DonkeyCar Community](http://www.donkeycar.com/)
 
 <!-- Markdown link & img dfn's -->
 [Py-image]: (https://img.shields.io/pypi/pyversions/donkeycar.svg)
