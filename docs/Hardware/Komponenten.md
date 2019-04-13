@@ -1,6 +1,6 @@
 ### Blockschaltbild
 
-![](../media/abbildung1.png)
+![](../media/abbildung1.PNG)
 Abbildung 1
 
 ### Erläuterung zu Abbildung 1:
