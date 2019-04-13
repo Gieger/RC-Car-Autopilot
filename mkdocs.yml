@@ -1,6 +1,6 @@
-site_name: Herbie
+site_name: RC-Car-Autopilot
 theme: readthedocs
 pages:
     - Home: index.md
-    - User Guide:
-        - 'Test': intro/index.md
+    - Hardware:
+        - 'Test': Hardware/Komponenten.md
