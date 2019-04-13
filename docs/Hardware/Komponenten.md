@@ -1,5 +1,6 @@
-### Hardware Rasperry Pi / jston TX2
+### Blockschaltbild
 
+![](./media/abbildung1.png)
 Abbildung 1
 
 ### Erläuterung zu Abbildung 1:
