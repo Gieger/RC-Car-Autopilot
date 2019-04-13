@@ -1,1 +1,5 @@
-site_name: My Docs
+site_name: Herbie
+pages:
+    - Home: index.md
+    - User Guide:
+        - 'Test': intro/index.md
