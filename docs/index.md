@@ -4,7 +4,7 @@ Entwicklung eines Autopiloten für ein RC-Fahrzeug durch maschinelles lernen
 
 
 
-![](./media/herbie_v3.jpg)
+![](../media/herbie_v3.jpg)
 
 ## Media
 
