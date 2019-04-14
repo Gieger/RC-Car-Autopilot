@@ -53,6 +53,10 @@ sudo python3 herbie.py
 
 Die Software wird über das Gamepad gesteuert.
 
+## Dokumentation
+
+[Dokumentation](https://rc-car-autopilot.readthedocs.io/)
+
 
 ## Release History
 
