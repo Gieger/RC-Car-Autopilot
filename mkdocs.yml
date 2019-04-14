@@ -3,4 +3,5 @@ theme: readthedocs
 pages:
     - Home: index.md
     - Hardware:
-        - 'Rasperry Pi': Hardware/Komponenten.md
+        - 'Raspberry Pi': Hardware/Komponenten.md
+    - Software: Software/Software.md
